@@ -3,50 +3,70 @@
 #include <algorithm>
 #include <cstdlib>
 #include <ctime>
+#include <set>
 
 using namespace std;
-vector <int>a;
-vector <int>b;
-void print_vec(const vector<int> &vec){
-    for(const int &it : vec){
-        cout << it << ", ";
+vector<int> a;
+vector<int> b;
+
+void print_vec(const vector<int> &vec)
+{
+    auto end = --(vec.end());
+    for (auto it = vec.begin(); it != end; it++)
+    {
+        cout << " " << *it << ",";
     }
-    cout <<"\n";
+    cout << " " << *end << "\n";
 }
 
-void print_union(){
-    vector<int> buff(a.size()+b.size());
-    auto iter = set_union(a.begin(),a.end(),b.begin(),b.end(),buff.begin());
-    buff.erase(iter,buff.end());
+void print_union()
+{
+    vector<int> buff(a.size() + b.size());
+    auto iter = set_union(a.begin(), a.end(), b.begin(), b.end(), buff.begin());
+    buff.erase(iter, buff.end());
 
     print_vec(buff);
 }
 
-void print_intersection(){
-    vector<int> buff(a.size()+b.size());
-    auto iter = set_intersection(a.begin(),a.end(),b.begin(),b.end(),buff.begin());
-    buff.erase(iter,buff.end());
-
-    print_vec(buff);
+void print_intersection()
+{
+    vector<int> buff(a.size() + b.size());
+    auto iter = set_intersection(a.begin(), a.end(), b.begin(), b.end(), buff.begin());
+    buff.erase(iter, buff.end());
+    if (buff.size())
+        print_vec(buff);
+    else
+        cout << "X\n";
 }
 
-int main(){
-    int n,m;
-
+int main()
+{
+    int n, m;
+    set<int> tmp1;
+    set<int> tmp2;
+    srand((unsigned int)time(NULL));
     cin >> n >> m;
-    for(int i=0;i<n;i++){
-        a.push_back(rand());
+    while (tmp1.size() != n)
+    {
+        tmp1.insert(rand() + 1);
     }
-    for(int i=0;i<m;i++){
-        b.push_back(rand());
-    }
+    copy(tmp1.begin(), tmp1.end(), back_inserter(a));
 
-    cout<<"ï¿½ï¿½ï¿½ï¿½ A- ";
+    while (tmp2.size() != m)
+    {
+        tmp2.insert(rand() + 1);
+    }
+    copy(tmp2.begin(), tmp2.end(), back_inserter(b));
+
+    sort(a.begin(), a.end());
+    sort(b.begin(), b.end());
+
+    cout << "ÁýÇÕA- ";
     print_vec(a);
-    cout<<"ï¿½ï¿½ï¿½ï¿½ B- ";
+    cout << "ÁýÇÕB- ";
     print_vec(b);
-    cout<<"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½- ";
+    cout << "ÇÕÁýÇÕ- ";
     print_union();
-    cout<<"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½- ";
+    cout << "±³ÁýÇÕ- ";
     print_intersection();
 }
