@@ -10,32 +10,32 @@ public:
 	Stack2()
 	{
 		head = new node;
-		z = head;
+		z = head; //초기는 head와 z는 같다.
 	};
 	~Stack2()
 	{
 		struct node *tmp;
 		tmp = z;
-		while (tmp != head)
+		while (tmp != head) // head 노드를 가르킬테까지
 		{
 			z = z->next;
 			delete tmp;
 			tmp = z;
 		}
-		delete tmp;
+		delete tmp; //마지막 head노드 삭제
 	};
 	void push(itemType v)
 	{
 		struct node *next = new node;
 		next->key = v;
-		next->next = z;
+		next->next = z; // top pointer를 가르키게한다.
 		z = next;
 	}
 	itemType pop()
 	{
 		struct node *tmp = z;
 		itemType key = z->key;
-		z = z->next;
+		z = z->next; // z->next로 넘어간 후  delete한다.
 		delete tmp;
 		return key;
 	}

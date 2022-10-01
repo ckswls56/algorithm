@@ -7,7 +7,7 @@ class Stack1
 {
 private:
   itemType *stack;
-  int p;
+  int p; // top pointer
 
 public:
   Stack1(int max = 100)
@@ -41,14 +41,14 @@ int main()
   while ((c = cin.get()) != '\n')
   {
     x = 0;
-    while (c == ' ')
+    while (c == ' ') //공백제거
       cin.get(c);
-    if (c == '+')
+    if (c == '+') //+연산
       x = acc.pop() + acc.pop();
-    if (c == '*')
+    if (c == '*') //*연산
       x = acc.pop() * acc.pop();
     while (c >= '0' && c <= '9')
-    {
+    { // atoi
       x = 10 * x + (c - '0');
       cin.get(c);
     }
