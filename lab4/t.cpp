@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
+#include <regex>
 using namespace std;
 
 struct word
@@ -13,6 +14,15 @@ word words[100];
 int word_cnt; // 단어 총 개수
 
 word *sorted;
+
+bool typeCheck(const char c)
+{
+    if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'))
+    {
+        return true;
+    }
+    return false;
+}
 
 void merge(word *list, int left, int mid, int right)
 {
@@ -128,7 +138,7 @@ void make_words(string s)
 
     for (int i = 0; i < s.size(); i++)
     {
-        if ((s[i] >= 0 && s[i] <= 47) || (s[i] >= 58 && s[i] <= 64) || (s[i] >= 91 && s[i] <= 96) || (s[i] >= 123 && s[i] <= 127))
+        if (!typeCheck(s[i]))
         {
             countWords(s.substr(j, i).c_str());
             j = i + 1;
@@ -154,28 +164,15 @@ int main()
         {
             string s;
             file >> s;
-            make_words(s);
+            const char *str;
+            str = s.c_str();
+            for (int i = 0; i < strlen(str); i++)
+            {
+                if (typeCheck(str[i]))
+                    cout << str[i] << endl;
+            }
         }
         file.close(); // 파일 닫기
-    }
-
-    merge_sort(words, 0, word_cnt - 1); // 빈도수로 정렬
-    int cnt = 0;
-    for (int i = 0; i < word_cnt - 1; i++)
-    {
-        if (words[i].cnt == words[i + 1].cnt)
-            cnt++;
-        else if (cnt)
-        {
-            merge_sort2(words, i - cnt, i); // ASCII값으로 정렬
-            cnt = 0;
-        }
-
-        if (words[i].cnt == words[word_cnt - 1].cnt) //마지막 빈도수랑 같은경우
-        {
-            merge_sort2(words, i, word_cnt - 1);
-            break;
-        }
     }
 
     showWords();

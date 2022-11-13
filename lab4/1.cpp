@@ -23,6 +23,7 @@ int partition(itemType a[], int l, int r)
     if (r > l)
     {
         v = a[l];
+        move_cnt++;
         i = l;
         j = r + 1;
         for (;;)

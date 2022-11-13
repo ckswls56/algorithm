@@ -2,75 +2,59 @@
 #include <cstdlib>
 #include <ctime>
 using namespace std;
+typedef int itemType;
 
 int compare_cnt, move_cnt; //비교 연산횟수, 자료이동 연산횟수 변수
 
-template <typename itemType>
-class MAKE_HEAP
-{
-private:
-    itemType *a;
-    int N;
-
-public:
-    MAKE_HEAP(int max)
-    {
-        a = new itemType[max];
-        N = 0;
-    }
-    ~MAKE_HEAP() { delete a; }
-    void swap(itemType a[], int i, int j)
-    {
-        int temp;
-        temp = a[j];
-        a[j] = a[i];
-        a[i] = temp;
-    }
-    void MakeHeap(itemType a[], int Root, int LastNode)
-    {
-        int Parent, LeftSon, RightSon, Son;
-        itemType RootValue;
-        Parent = Root;
-        RootValue = a[Root];
-        move_cnt++;
-        LeftSon = 2 * Parent + 1;
-        RightSon = LeftSon + 1;
-        while (LeftSon < LastNode)
-        {
-            compare_cnt++;
-            if (RightSon <= LastNode && a[LeftSon] < a[RightSon])
-            {
-                Son = RightSon;
-            }
-            else
-                Son = LeftSon;
-            compare_cnt++;
-            if (RootValue < a[Son])
-            {
-                move_cnt++;
-                a[Parent] = a[Son];
-                Parent = Son;
-                LeftSon = Parent * 2 + 1;
-                RightSon = LeftSon + 1;
-            }
-            else
-                break;
-        }
-        a[Parent] = RootValue;
-        move_cnt++;
-    }
-    void heapsort(itemType a[], int N)
-    {
-        int i;
-        for (i = N / 2; i >= 1; i--)
-            MakeHeap(a, i - 1, N - 1);
-        for (i = N - 1; i >= 1; i--)
-        {
-            swap(a, 0, i);
-            MakeHeap(a, 0, i - 1);
-        }
-    }
+typedef struct node *node_pointer; 
+typedef struct node {
+      itemType value; 
+      node_pointer next;
 };
+
+node_pointer TABLE[10], x, z, temp;
+
+
+void radixSort(itemType *a, int n) {
+      int i,j, cnt, radix, radix_mod =10, cipher=0; 
+      i=n; 
+      while(i>0) { i=i/10; cipher++; } // ascipher : 입력 데이터의 자리수 (ex. 450 -> 3)
+      for(i=0; i<cipher; i++) {
+            for(j=0; j<n; j++) {
+                  cnt=0; radix = (a[j]%radix_mod)/(radix_mod/10); 
+                          /* radix_mod = 10 이면 radix는 a[j]의 일의 자리수
+                         radix_mod = 100 이면 radix는 a[j]의 십의 자리수 */
+                  temp = new node; temp->value = a[j]; temp->next = z; 
+                  if(TABLE[radix] == z) {  
+                          // z는 list의 끝을 확인하기 위한 노드 포인터 (NULL에 해당)
+                        TABLE[radix]=temp; 
+                  } else {
+                        x=TABLE[radix]; 
+                        while(x->next != z) {
+                              x=x->next; 
+                        }
+                        x->next=temp; 
+                  }
+            }
+
+            for(j=0; j<10; j++) {
+                  if(TABLE[j]!=z) {
+                        x=TABLE[j]; 
+                        while(x!=z) {
+                              a[cnt++] = x->value; 
+                              temp = x; // 메모리에서 노드를 삭제하기 위해 임시 저장
+                              x=x->next; 
+                                             delete temp; // 배열에 이미 넣은 노드를 메모리에서 삭제
+                        }
+                  }
+                  TABLE[j]=z; 
+            }
+            radix_mod*=10; 
+      }
+}
+
+
+
 
 void swap2(int &a, int &b)
 { // a와 b를 서로 교환하는 함수
@@ -98,7 +82,6 @@ int main()
         a[i] = n - i; // 내림차순으로 정렬된 배열 생성
 
     int **c = new int *[n];
-
     srand((unsigned)time(NULL)); // 현재시간을 이용해 난수발생기 rand()의 초기값을 재설정
     for (int i = 0; i < n; i++)
     {
@@ -122,7 +105,7 @@ int main()
 
     for (int i = 0; i < n; i++)
     {
-        b[i] = c[i][1]; //난수
+        b[i] = c[i][1]; // 난수
     }
 
     int compare_cnt_a, compare_cnt_b, compare_cnt_c, move_cnt_a, move_cnt_b, move_cnt_c;
@@ -138,25 +121,24 @@ int main()
 
     cout << "SortedData_A: ";
 
-    auto A = MAKE_HEAP<int>(n); // heapsort 객체 생성
-    A.heapsort(a, n);           // heapsort
+    radixSort(a,n);
     move_cnt_a = move_cnt;
     compare_cnt_a = compare_cnt;
     print_arr(a);
 
     cout << "SortedData_B: ";
-    A.heapsort(b, n);
+    radixSort(b,n);
     move_cnt_b = move_cnt;
     compare_cnt_b = compare_cnt;
     print_arr(b);
 
     for (int i = 0; i < n; i++)
     {
-        b[i] = c[i][0]; // 중복이 허용된 난수
+        b[i] = c[i][0]; //중복이 허용된 난수
     }
 
     cout << "SortedData_C:";
-    A.heapsort(b, n);
+    radixSort(b,n);
     move_cnt_c = move_cnt;
     compare_cnt_c = compare_cnt;
     print_arr(b);
