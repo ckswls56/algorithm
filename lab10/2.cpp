@@ -75,14 +75,14 @@ void rksearch(char p[][10], char a[][100])
                 if (flag)
                 {
                     cout << k << ", " << i << endl;
-                } // 결과값 출력
-            }
-            if (i < n - m)
-            {
-                for (t = 0; t < m; t++)
+                }
+                if (i < n - m)
                 {
-                    h2 = (h2 - index(a[k + t][i]) * dM) % q;
-                    h2 = (h2 * d + index(a[k + t][i + m])) % q;
+                    for (t = 0; t < m; t++)
+                    {
+                        h2 = (h2 - index(a[k + t][i]) * dM) % q;
+                        h2 = (h2 * d + index(a[k + t][i + m])) % q;
+                    }
                 }
             }
         }
